@@ -95,6 +95,88 @@ Une fois tous les services démarrés, vous devriez voir une image similaire à 
 - Grafana : http://localhost:3000 (admin/admin par défaut)
 - MariaDB : localhost:3306
 
+## Test de l'application frontend
+
+### 1. Accès à l'interface de connexion
+Une fois tous les services démarrés, accédez au frontend à l'adresse http://localhost:3005/login
+
+Vous verrez l'interface de connexion suivante :
+
+![Page de connexion](docs/images/login.png)
+
+### 2. Authentification
+Utilisez les credentials configurés dans le backend Spring Security (`application.properties`) :
+
+- **Username :** `user@app.com`
+- **Mot de passe :** `password`
+
+Ces credentials correspondent à la configuration Spring Security :
+```properties
+spring.security.user.name=user@app.com
+spring.security.user.password=password
+```
+
+### 3. Vérification de l'authentification
+Après connexion réussie, vous pouvez vérifier que l'authentification est stockée dans le localStorage du navigateur :
+
+![LocalStorage après connexion](docs/images/localstorage.png)
+
+### 4. Test des fonctionnalités
+Une fois connecté, vous pouvez tester les fonctionnalités de l'application :
+- Consulter la liste des voitures
+- Ajouter une nouvelle voiture
+- Modifier les informations existantes
+
+![Résultat de test](docs/images/result.png)
+
+## Configuration du monitoring (Prometheus + Grafana)
+
+### 1. Vérification de Prometheus
+Après avoir démarré tous les services, vérifiez que Prometheus collecte correctement les métriques :
+
+1. Accédez à l'interface Prometheus : http://localhost:9090
+2. Vérifiez le statut des targets dans **Status > Targets**
+3. Vous devriez voir les services configurés dans `prometheus.yml` :
+   - `prometheus` (lui-même)
+   - `spring-actuator` (votre application Spring Boot)
+
+![Vérification statut Prometheus](docs/images/prometh-verif.png)
+
+### 2. Configuration de Grafana
+
+#### Connexion du datasource Prometheus
+1. Accédez à Grafana : http://localhost:3000
+2. Connectez-vous avec les credentials par défaut : `admin` / `admin`
+3. Allez dans **Configuration > Data Sources**
+4. Ajoutez un nouveau datasource de type **Prometheus**
+5. Configurez l'URL : `http://prometheus-tp:9090`
+
+![Connexion Prometheus dans Grafana](docs/images/grafana-premth-link.png)
+
+> **Note :** L'URL `http://prometheus-tp:9090` utilise le nom du service Docker défini dans le `docker-compose.yml` de Prometheus. Cela permet à Grafana de communiquer avec Prometheus via le réseau Docker interne.
+
+#### Import du dashboard Spring Boot Actuator
+1. Allez dans **Create > Import**
+2. Utilisez l'ID de dashboard Grafana Labs : **13694**
+3. Ce dashboard est spécialement conçu pour les métriques Spring Boot Actuator
+4. Sélectionnez le datasource Prometheus configuré précédemment
+5. Cliquez sur **Import**
+
+![Dashboard Grafana avec métriques Spring Boot](docs/images/grafana-dash.png)
+
+### 3. Métriques disponibles
+Le dashboard 13694 affiche les métriques essentielles de votre application Spring Boot :
+- **JVM Memory** : Utilisation mémoire heap/non-heap
+- **CPU Usage** : Utilisation processeur
+- **HTTP Requests** : Nombre et durée des requêtes
+- **Database Connections** : Pool de connexions DB
+- **Actuator Endpoints** : Santé de l'application
+
+### 4. Configuration avancée
+Pour personnaliser la collecte de métriques, vous pouvez modifier :
+- `TP Complet/backend/Prometheus Conf/prometheus.yml` : Configuration des cibles à scraper
+- `application.properties` : Exposition des endpoints Actuator et fréquence des métriques
+
 ## Notes de sécurité et production
 - Ne pas committer de secrets dans le repo. Utiliser des variables d'environnement ou un secret manager.
 - Restreindre CORS et endpoints Actuator en production.
