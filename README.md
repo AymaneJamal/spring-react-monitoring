@@ -89,7 +89,7 @@ Une fois tous les services démarrés, vous devriez voir une image similaire à 
 ![Docker Containers Running](docs/images/docker-containers-running.png)
 
 **Accès aux services :**
-- Frontend : http://localhost:3005 (ou port configuré)
+- Frontend : http://localhost:3005
 - Backend API : http://localhost:8080/api
 - Prometheus : http://localhost:9090
 - Grafana : http://localhost:3000 (admin/admin par défaut)
@@ -122,10 +122,7 @@ Après connexion réussie, vous pouvez vérifier que l'authentification est stoc
 ![LocalStorage après connexion](docs/images/localstorage.png)
 
 ### 4. Test des fonctionnalités
-Une fois connecté, vous pouvez tester les fonctionnalités de l'application :
-- Consulter la liste des voitures
-- Ajouter une nouvelle voiture
-- Modifier les informations existantes
+Une fois connecté, vous pouvez tester les fonctionnalités de l'application en consulter la liste des voitures
 
 ![Résultat de test](docs/images/result.png)
 
