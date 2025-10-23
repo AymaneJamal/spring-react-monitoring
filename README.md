@@ -135,7 +135,7 @@ Après avoir démarré tous les services, vérifiez que Prometheus collecte corr
 2. Vérifiez le statut des targets dans **Status > Targets**
 3. Vous devriez voir les services configurés dans `prometheus.yml` :
    - `prometheus` (lui-même)
-   - `spring-actuator` (votre application Spring Boot)
+   - `spring-actuator` ( application Spring Boot)
 
 ![Vérification statut Prometheus](docs/images/prometh-verif.png)
 
@@ -162,7 +162,7 @@ Après avoir démarré tous les services, vérifiez que Prometheus collecte corr
 ![Dashboard Grafana avec métriques Spring Boot](docs/images/grafana-dash.png)
 
 ### 3. Métriques disponibles
-Le dashboard 13694 affiche les métriques essentielles de votre application Spring Boot :
+Le dashboard 13694 affiche les métriques essentielles de l'application Spring Boot :
 - **JVM Memory** : Utilisation mémoire heap/non-heap
 - **CPU Usage** : Utilisation processeur
 - **HTTP Requests** : Nombre et durée des requêtes
@@ -174,11 +174,3 @@ Pour personnaliser la collecte de métriques, vous pouvez modifier :
 - `TP Complet/backend/Prometheus Conf/prometheus.yml` : Configuration des cibles à scraper
 - `application.properties` : Exposition des endpoints Actuator et fréquence des métriques
 
-## Notes de sécurité et production
-- Ne pas committer de secrets dans le repo. Utiliser des variables d'environnement ou un secret manager.
-- Restreindre CORS et endpoints Actuator en production.
-- Remplacer `ddl-auto=update` par migrations gérées (Flyway / Liquibase) pour éviter dérives du schéma.
-
----
-
-Ce README est un point de départ : je peux l'étendre avec un diagramme d'architecture (SVG), exemples de commandes CI/CD (GitHub Actions) et un guide pour provisionner dashboards Grafana si tu veux. Veux‑tu que j'ajoute ces sections maintenant ?
