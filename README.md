@@ -1,6 +1,6 @@
 # Spring React Monitoring
 
-Petit projet démonstratif full‑stack pour portfolio : une application de gestion / inventaire de voitures composée d'un backend Spring Boot (Java 17) et d'un frontend React, containerisée avec Docker Compose et observée via Prometheus + Grafana.
+Projet démonstratif full‑stack: une application composée d'un backend Spring Boot (Java 17) et d'un frontend React, containerisée avec Docker Compose et observée via Prometheus + Grafana.
 
 ## Composants
 - Backend (Spring Boot) : service Java exposant une API REST sous `/api` et endpoint Actuator `/actuator/prometheus` pour métriques. Packaging via Maven, image Docker basée sur le JAR construit.
@@ -29,19 +29,71 @@ Petit projet démonstratif full‑stack pour portfolio : une application de gest
 5. Réseau & découverte
    - Docker Compose crée un réseau isolé `tp-complet` et tous les services sont connectés à ce réseau. Les services communiquent entre eux par leurs noms de service définis dans les fichiers `docker-compose.yml`.
 
-## Démarrage local rapide
-1. Copier `.env.example` → `.env` et remplir les secrets (DB password, Grafana admin pass si souhaité).
-2. Lancer l'ensemble :
+## Démarrage local (étapes détaillées)
 
+### 1. Préparation
+Importer tout le projet et préparer les builds :
+
+**Backend (Spring Boot) :**
 ```bash
-docker-compose up --build
+cd "TP Complet/backend/SpringDataRest"
+mvn clean package
 ```
 
-3. Accéder aux services :
-- Frontend (Nginx) : http://localhost
-- Backend : http://localhost:8080 (API `/api`)
+**Frontend (React) :**
+```bash
+cd "Tp Complet Frontend/frontend"
+npm install
+npm run build
+```
+
+### 2. Base de données (MariaDB)
+Démarrer la base de données en premier :
+```bash
+cd "TP Complet/backend/Database Conf"
+docker-compose up -d
+```
+
+### 3. Backend (Spring Boot)
+Une fois la base de données up, lancer l'application Spring Boot :
+```bash
+cd "TP Complet/backend/SpringDataRest"
+docker-compose up -d
+```
+
+### 4. Prometheus
+Lancer Prometheus pour la collecte de métriques :
+```bash
+cd "TP Complet/backend/Prometheus Conf"
+docker-compose up -d
+```
+
+### 5. Grafana
+Lancer Grafana pour la visualisation :
+```bash
+cd "TP Complet/backend/Grafana Conf"
+docker-compose up -d
+```
+
+### 6. Frontend (React/Nginx)
+Enfin, construire et lancer le frontend :
+```bash
+cd "Tp Complet Frontend"
+docker-compose build
+docker-compose up -d
+```
+
+### 7. Vérification
+Une fois tous les services démarrés, vous devriez voir une image similaire à celle-ci dans Docker Desktop :
+
+![Docker Containers Running](docs/images/docker-containers-running.png)
+
+**Accès aux services :**
+- Frontend : http://localhost:3005 (ou port configuré)
+- Backend API : http://localhost:8080/api
 - Prometheus : http://localhost:9090
-- Grafana : http://localhost:3000 (admin/admin par défaut — changer en prod)
+- Grafana : http://localhost:3000 (admin/admin par défaut)
+- MariaDB : localhost:3306
 
 ## Notes de sécurité et production
 - Ne pas committer de secrets dans le repo. Utiliser des variables d'environnement ou un secret manager.
