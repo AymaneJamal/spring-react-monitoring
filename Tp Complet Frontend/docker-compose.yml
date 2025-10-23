@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3005:80"
+    container_name: voiture-frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tp-complet
+
+
+networks:
+  tp-complet:
+    driver: bridge
+    name: tp-complet
