@@ -1,0 +1,13 @@
+node_modules
+.git
+.gitignore
+README.md
+.env
+.nyc_output
+coverage
+.npm
+.eslintcache
+*.log
+src
+public
+package*.json
